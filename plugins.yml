@@ -1,0 +1,6 @@
+plugins:
+  ens:
+    title: "ENS Plugin"
+    description: "Resolve & display ENS addresses throughout the wallet"
+    npm: "@burner-wallet/ens-plugin"
+    author: "David Mihal/Burner Factory"
