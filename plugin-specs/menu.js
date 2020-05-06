@@ -1,5 +1,5 @@
 export default {
-  id: 'ens',
+  id: 'menu',
   name: 'Order Menu',
   package: '@burner-factory/order-menu-plugin',
   getArgs(data) {

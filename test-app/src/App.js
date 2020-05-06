@@ -5,6 +5,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import plugins from '../../plugin-specs';
 
+const pluginsById = {};
+plugins.forEach(plugin => {
+  pluginsById[plugin.id] = plugin;
+})
+
 const App = () => {
   const [selectedPlugins, setSelectedPlugins] = useState([]);
   const availablePlugins = plugins.filter(plugin => selectedPlugins.indexOf(plugin.id) === -1);
@@ -23,6 +28,23 @@ const App = () => {
           </ListItem>
         ))}
       </List>
+
+      <code>
+{selectedPlugins.map(pluginId => {
+  const plugin = pluginsById[pluginId];
+  return `import ${pluginId} from '${plugin.package}';`;
+}).join('\n')}
+{`
+
+const plugins = [
+`}
+
+{selectedPlugins.map(pluginId => {
+  // const plugin = pluginsById[pluginId];
+  return `  new ${pluginId}();`;
+}).join('\n')}
+{'\n];'}
+      </code>
     </div>
   );
 }
