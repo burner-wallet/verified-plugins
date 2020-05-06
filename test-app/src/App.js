@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 
 import plugins from '../../plugin-specs';
@@ -44,17 +48,48 @@ const App = () => {
   return (
     <div>
       <h1>Burner Wallet Plugins</h1>
-      <List className={classes.pluginList}>
-        {availablePlugins.map(plugin => (
-          <ListItem
-            key={plugin.id}
-            onClick={() => setSelectedPlugins([...selectedPlugins, plugin.id])}
-            button
-          >
-            <ListItemText primary={plugin.name} secondary={`${plugin.id} - ${plugin.package}`} />
-          </ListItem>
-        ))}
-      </List>
+      <div className={classes.cols}>
+        <List className={classes.pluginList}>
+          {availablePlugins.map(plugin => (
+            <ListItem
+              key={plugin.id}
+              onClick={() => setSelectedPlugins([...selectedPlugins, plugin.id])}
+              button
+              divider
+            >
+              <ListItemText primary={plugin.name} secondary={`${plugin.id} - ${plugin.package}`} />
+            </ListItem>
+          ))}
+        </List>
+        <List>
+          {selectedPlugins.map(pluginId => {
+            const plugin = pluginsById[pluginId];
+            return (
+              <ListItem key={plugin.id} divider>
+                <div>
+                  <ListItemText primary={plugin.name} />
+                  {/*plugin.editors && plugin.editors.map(editor => (
+                    <Button
+                      key={editor.label}
+                      onClick={() => setPluginEditor({ wallet, pluginData: wallet.plugins[id], ...editor })}
+                    >
+                      {editor.label}
+                    </Button>
+                  ))*/}
+                </div>
+                <ListItemSecondaryAction>
+                  <IconButton
+                    edge="end"
+                    onClick={() => setSelectedPlugins(selectedPlugins.filter(_plugin => _plugin !== pluginId))}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            );
+          })}
+        </List>
+      </div>
 
       <code>
 {selectedPlugins.map(pluginId => {
