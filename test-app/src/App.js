@@ -120,9 +120,18 @@ const App = () => {
 const plugins = [
 `}
 
-{selectedPlugins.map(pluginId => {
+{selectedPlugins.filter(pluginId => {
   const plugin = pluginsById[pluginId];
-  const args = generatePluginArgs(plugin, {}, []);
+  if (plugin.getIncomplete) {
+    return !plugin.getIncomplete({
+      pluginWalletData: pluginWalletDataDB[pluginId] || {},
+      pluginUserData: pluginUserDataDB[pluginId] || {},
+    });
+  }
+  return true;
+}).map(pluginId => {
+  const plugin = pluginsById[pluginId];
+  const args = generatePluginArgs(plugin, pluginWalletDataDB[pluginId], pluginUserDataDB[pluginId]);
   return `  new ${pluginId}(${args}),`;
 }).join('\n')}
 {'\n];'}
