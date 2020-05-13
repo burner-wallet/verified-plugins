@@ -1,8 +1,8 @@
 export default {
-  id: 'menu',
-  name: 'Order Menu',
-  package: '@burner-factory/order-menu-plugin',
-  version: '^0.1.1',
+  id: 'vendor',
+  name: 'Vendor',
+  package: '@burner-factory/vendor-plugin',
+  version: '^0.1.3',
   getIncomplete(data) {
     if (!data.pluginWalletData.menuId) {
       return 'Select a menu';
