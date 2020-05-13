@@ -1,0 +1,8 @@
+{
+  "name": "@burner-factory/verified-plugins",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/burner-factory/verified-plugins.git",
+  "author": "David Mihal <david@dmihal.com>",
+  "license": "MIT"
+}
