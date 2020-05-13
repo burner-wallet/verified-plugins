@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -8,7 +9,12 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 
+import editors from '../../plugin-editors';
 import plugins from '../../plugin-specs';
+import ErrorBoundary from './ErrorBoundary';
+import PluginUserData from './PluginUserData';
+import PluginWalletData from './PluginWalletData';
+import { useDB } from './DB';
 
 const pluginsById = {};
 plugins.forEach(plugin => {
@@ -44,6 +50,8 @@ const App = () => {
   const classes = useStyles();
   const [selectedPlugins, setSelectedPlugins] = useState([]);
   const availablePlugins = plugins.filter(plugin => selectedPlugins.indexOf(plugin.id) === -1);
+  const [pluginEditor, setPluginEditor] = useState(null);
+  const { pluginWalletDataDB, pluginUserDataDB } = useDB();
 
   return (
     <div>
@@ -68,14 +76,14 @@ const App = () => {
               <ListItem key={plugin.id} divider>
                 <div>
                   <ListItemText primary={plugin.name} />
-                  {/*plugin.editors && plugin.editors.map(editor => (
+                  {editors[pluginId] && editors[pluginId].map(editor => (
                     <Button
                       key={editor.label}
-                      onClick={() => setPluginEditor({ wallet, pluginData: wallet.plugins[id], ...editor })}
+                      onClick={() => setPluginEditor({ component: editor.component, plugin: plugin.id })}
                     >
                       {editor.label}
                     </Button>
-                  ))*/}
+                  ))}
                 </div>
                 <ListItemSecondaryAction>
                   <IconButton
@@ -89,6 +97,17 @@ const App = () => {
             );
           })}
         </List>
+      </div>
+
+      <div style={{ display: 'flex' }}>
+        <code style={{flex: '1'}}>
+          {'Wallet plugin data:\n\n'}
+          {JSON.stringify(pluginWalletDataDB, null, 2)}
+        </code>
+        <code style={{flex: '1'}}>
+          {'User plugin data:\n\n'}
+          {JSON.stringify(pluginUserDataDB, null, 2)}
+        </code>
       </div>
 
       <code>
@@ -108,6 +127,18 @@ const plugins = [
 }).join('\n')}
 {'\n];'}
       </code>
+
+      <Dialog open={!!pluginEditor} onClose={() => setPluginEditor(null)}>
+        <ErrorBoundary>
+          {pluginEditor ? (
+            <pluginEditor.component
+              plugin={pluginsById[pluginEditor.plugin]}
+              pluginWalletData={pluginWalletDataDB[pluginEditor.plugin] || new PluginWalletData('walletId', pluginEditor.plugin, {})}
+              pluginUserData={pluginUserDataDB[pluginEditor.plugin] || new PluginUserData(pluginEditor.plugin, [])}
+            />
+          ) : <Fragment />}
+        </ErrorBoundary>
+      </Dialog>
     </div>
   );
 }
