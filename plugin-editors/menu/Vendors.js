@@ -17,15 +17,13 @@ import MenuEditor from './MenuEditor';
 //   return { menu, asset };
 // };
 
-const Vendors = ({ menu, asset }) => {
+const Vendors = ({ pluginWalletData, pluginUserData, menuId, asset }) => {
+  const menu = pluginUserData.get(menuId);
+
   const [tab, setTab] = useState(0);
   const [newName, setNewName] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const vendor = tab === 0 ? null : menu.data.vendors[tab - 1];
-
-  if (!menu) {
-    return null;
-  }
+  const vendor = tab === 0 ? null : menu.vendors[tab - 1];
 
   const addVendor = async () => {
     const newVendor = {
@@ -35,29 +33,21 @@ const Vendors = ({ menu, asset }) => {
       items: [],
       isOpen: true,
     };
-    await Meteor.callPromise('updatePluginData', menu._id, {
-      ...menu.data,
-      vendors: [...menu.data.vendors, newVendor],
-    });
+    await pluginUserData.update(menuId, { ...menu, vendors: [...menu.vendors, newVendor] });
     setNewName('');
-    setTab(menu.data.vendors.length - 1);
+    setTab(menu.vendors.length - 1);
   };
 
-  const updateItems = async (vendor, items) => {
-    await Meteor.callPromise('updatePluginData', menu._id, {
-      ...menu.data,
-      vendors: menu.data.vendors.map(_vendor => _vendor === vendor ? { ...vendor, items } : _vendor),
+  const setVendorProp = async (vendor, prop, val) => {
+    await pluginUserData.update(menuId, {
+      ...menu,
+      vendors: menu.vendors.map(_vendor => _vendor === vendor ? { ...vendor, [prop]: val } : _vendor),
     });
   };
-
-  const setVendorProp = (vendor, prop, val) => Meteor.callPromise('updatePluginData', menu._id, {
-    ...menu.data,
-    vendors: menu.data.vendors.map(_vendor => _vendor === vendor ? { ...vendor, [prop]: val } : _vendor),
-  });
 
   return (
     <div>
-      <AssetSelector
+      {/*<AssetSelector
         asset={asset}
         query={{
           $or: [
@@ -67,7 +57,7 @@ const Vendors = ({ menu, asset }) => {
           ],
         }}
         onChange={asset => Meteor.call('updatePluginData', menu._id, { ...menu.data, asset: asset._id })}
-      />
+      />*/}
 
       <AppBar position="static" color="default">
         <Tabs
@@ -79,7 +69,7 @@ const Vendors = ({ menu, asset }) => {
           scrollButtons="auto"
         >
           <Tab label="New Vendor" />
-          {menu.data.vendors.map(vendor => (
+          {menu.vendors.map(vendor => (
             <Tab label={vendor.name} key={vendor.name} />
           ))}
         </Tabs>
@@ -102,7 +92,7 @@ const Vendors = ({ menu, asset }) => {
             control={<Checkbox checked={vendor.isOpen} onChange={e => setVendorProp(vendor, 'isOpen', e.target.checked)} />}
             label="Is open"
           />
-          <MenuEditor menu={vendor.items} onChange={items => setVendorProp(vendor, 'items', items)} />
+          <MenuEditor menu={vendor.items} onChange={items => console.log(items) || setVendorProp(vendor, 'items', items)} />
         </div>
       ) : (
         <div>

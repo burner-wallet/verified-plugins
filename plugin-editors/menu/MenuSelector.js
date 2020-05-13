@@ -38,7 +38,7 @@ const MenuSelector = ({ plugin, pluginWalletData, pluginUserData }) => {
 
   const create = async () => {
     setPending(true);
-    const id = await pluginUserData.add({ name: menuName, type: 'menu' });
+    const id = await pluginUserData.add({ name: menuName, vendors: [], type: 'menu' });
     await pluginWalletData.update({ menuId: id });
     setSelection(id);
     setPending(false);
@@ -71,7 +71,11 @@ const MenuSelector = ({ plugin, pluginWalletData, pluginUserData }) => {
         </div>
       )}
       {selection !== 'none' && selection !== 'new' && (
-        <Vendors menuId={selection} />
+        <Vendors
+          pluginWalletData={pluginWalletData}
+          pluginUserData={pluginUserData}
+          menuId={selection}
+        />
       )}
     </div>
   );
