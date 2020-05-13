@@ -6,18 +6,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import TextField from '@material-ui/core/TextField';
-// import { Assets, PluginData } from '/client/collections';
-// import AssetSelector from '/client/components/AssetSelector';
 import MenuEditor from './MenuEditor';
 
-// const data = ({ menuId }) => {
-//   Meteor.subscribe('default');
-//   const menu = PluginData.findOne(menuId);
-//   const asset = menu && menu.data.asset ? Assets.findOne(menu.data.asset) : null;
-//   return { menu, asset };
-// };
-
-const Vendors = ({ pluginWalletData, pluginUserData, menuId, asset }) => {
+const Vendors = ({ pluginWalletData, pluginUserData, menuId, asset, components }) => {
   const menu = pluginUserData.get(menuId);
 
   const [tab, setTab] = useState(0);
@@ -35,7 +26,7 @@ const Vendors = ({ pluginWalletData, pluginUserData, menuId, asset }) => {
     };
     await pluginUserData.update(menuId, { ...menu, vendors: [...menu.vendors, newVendor] });
     setNewName('');
-    setTab(menu.vendors.length - 1);
+    setTab(menu.vendors.length + 1);
   };
 
   const setVendorProp = async (vendor, prop, val) => {
@@ -47,17 +38,10 @@ const Vendors = ({ pluginWalletData, pluginUserData, menuId, asset }) => {
 
   return (
     <div>
-      {/*<AssetSelector
-        asset={asset}
-        query={{
-          $or: [
-            { type: 'native' },
-            { type: 'ERC20', address: { $exists: true, $ne: null } },
-            { type: 'ERC777', address: { $exists: true, $ne: null } },
-          ],
-        }}
-        onChange={asset => Meteor.call('updatePluginData', menu._id, { ...menu.data, asset: asset._id })}
-      />*/}
+      <components.AssetSelector
+        asset={menu.asset}
+        onChange={asset => pluginUserData.update(menuId, { ...menu, asset })}
+      />
 
       <AppBar position="static" color="default">
         <Tabs
@@ -92,7 +76,7 @@ const Vendors = ({ pluginWalletData, pluginUserData, menuId, asset }) => {
             control={<Checkbox checked={vendor.isOpen} onChange={e => setVendorProp(vendor, 'isOpen', e.target.checked)} />}
             label="Is open"
           />
-          <MenuEditor menu={vendor.items} onChange={items => console.log(items) || setVendorProp(vendor, 'items', items)} />
+          <MenuEditor menu={vendor.items} onChange={items => setVendorProp(vendor, 'items', items)} />
         </div>
       ) : (
         <div>

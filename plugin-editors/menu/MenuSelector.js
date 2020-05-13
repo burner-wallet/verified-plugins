@@ -14,13 +14,7 @@ const useStyles = makeStyles({
   },
 });
 
-// const data = () => ({
-//   loading: Meteor.subscribe('pluginData', 'menu'),
-//   menus: PluginData.find({ plugin: 'menu' }).fetch(),
-// })
-
-const MenuSelector = ({ plugin, pluginWalletData, pluginUserData }) => {
-// const MenuSelector = ({ wallet, menus, pluginData, pluginId='menu' }) => {
+const MenuSelector = ({ plugin, pluginWalletData, pluginUserData, components }) => {
   const [selection, setSelection] = useState(pluginWalletData.menuId || 'none');
   const [menuName, setMenuName] = useState('');
   const [pending, setPending] = useState(false);
@@ -70,11 +64,13 @@ const MenuSelector = ({ plugin, pluginWalletData, pluginUserData }) => {
           <Button onClick={create} disabled={pending || menuName.length < 2}>Create</Button>
         </div>
       )}
+
       {selection !== 'none' && selection !== 'new' && (
         <Vendors
           pluginWalletData={pluginWalletData}
           pluginUserData={pluginUserData}
           menuId={selection}
+          components={components}
         />
       )}
     </div>

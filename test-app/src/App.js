@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import editors from '../../plugin-editors';
 import plugins from '../../plugin-specs';
+import components from './components';
 import ErrorBoundary from './ErrorBoundary';
 import PluginUserData from './PluginUserData';
 import PluginWalletData from './PluginWalletData';
@@ -144,6 +145,7 @@ const plugins = [
               plugin={pluginsById[pluginEditor.plugin]}
               pluginWalletData={pluginWalletDataDB[pluginEditor.plugin] || new PluginWalletData('walletId', pluginEditor.plugin, {})}
               pluginUserData={pluginUserDataDB[pluginEditor.plugin] || new PluginUserData(pluginEditor.plugin, [])}
+              components={components}
             />
           ) : <Fragment />}
         </ErrorBoundary>
