@@ -9,7 +9,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 
-import editors from '../../plugin-editors';
+import editors from '../../plugin-components';
 import plugins from '../../plugin-specs';
 import components from './components';
 import ErrorBoundary from './ErrorBoundary';

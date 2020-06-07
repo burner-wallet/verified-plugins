@@ -1,5 +1,7 @@
 import MenuSelector from './MenuSelector';
 
+const dashboards = [];
+
 const editors = [
   {
     label: 'Edit menu',
@@ -7,4 +9,4 @@ const editors = [
   }
 ];
 
-export default editors;
+export default { editors, dashboards };
