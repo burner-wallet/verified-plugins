@@ -1,8 +1,11 @@
+export interface Components {
+  AssetSelector: React.ComponentType<{ asset: string, onChange: (asset: string) => void }>;
+}
+
 export interface PluginEditorProps {
-  plugin: any;
   pluginWalletData: any;
   pluginUserData: any;
-  components: any;
+  components: Components;
 }
 
 export interface PluginEditor {
@@ -18,6 +21,6 @@ export interface PluginComponents {
   dashboards: PluginDashboards[];
 }
 
-declare const plugins: { [id: string]: PluginEditors };
+declare const plugins: { [id: string]: PluginComponents };
 
 export default plugins;

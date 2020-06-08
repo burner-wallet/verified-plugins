@@ -14,7 +14,7 @@ const useStyles = makeStyles({
   },
 });
 
-const MenuSelector = ({ plugin, pluginWalletData, pluginUserData, components }) => {
+const MenuSelector = ({ pluginWalletData, pluginUserData, components }) => {
   const [selection, setSelection] = useState(pluginWalletData.menuId || 'none');
   const [menuName, setMenuName] = useState('');
   const [pending, setPending] = useState(false);
